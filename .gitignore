@@ -29,3 +29,4 @@ screenshots/
 *.jpeg
 *.md
 !knowledge/telecus/*.md
+!/README.md
