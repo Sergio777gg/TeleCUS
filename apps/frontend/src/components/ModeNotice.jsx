@@ -1,0 +1,1 @@
+export function ModeNotice({mode}){return <div className={'mode-note mode-note--'+(mode==='demo'?'demo':mode==='supabase-live'?'live':'readonly')}>{mode==='demo'?'Versión de prueba · citas ficticias':mode==='supabase-live'?'Agenda real · operaciones habilitadas':'Agenda real · consultas habilitadas'}</div>;}

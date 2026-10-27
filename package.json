@@ -1,0 +1,28 @@
+{
+  "name": "telecus-local",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "apps/backend",
+    "apps/frontend"
+  ],
+  "scripts": {
+    "build": "npm run build --workspace @telecus/backend && npm run build --workspace @telecus/frontend",
+    "start": "node scripts/start.cjs",
+    "stop": "node scripts/stop.cjs",
+    "test": "npm run build --workspace @telecus/backend && node --test --test-isolation=none tests/*.test.cjs",
+    "check": "npm run build && npm test",
+    "test:local": "node tests/api-live.cjs",
+    "test:deployment": "node tests/deployment-live.cjs",
+    "evaluate:chatbot": "npm run build --workspace @telecus/backend && node tests/evaluation/run.cjs",
+    "check:layout": "node scripts/check-layout.cjs",
+    "release": "npm run check:layout && npm run check && node scripts/package-release.cjs",
+    "check:architecture": "node scripts/check-architecture.cjs",
+    "test:behaviour": "npm run build --workspace @telecus/backend && node --test tests/behaviour-battery.test.cjs",
+    "evaluate:behaviour": "npm run build --workspace @telecus/backend && node tests/evaluation/behaviour-run.cjs",
+    "prepare:share": "npm run check:layout && npm run check:architecture && npm run check && node scripts/package-release.cjs --folder"
+  },
+  "engines": {
+    "node": ">=22.13.0"
+  }
+}

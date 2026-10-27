@@ -1,0 +1,39 @@
+/* Shared visual decisions. Feature styles consume these tokens. */
+:root {
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  color: #202849;
+  background: #f5f6fb;
+  font-synthesis: none;
+  --color-text: #202849;
+  --color-muted: #626b83;
+  --color-primary: #001282;
+  --color-primary-hover: #000d60;
+  --color-primary-soft: #edf0ff;
+  --color-sidebar: #001282;
+  --color-sidebar-hover: #182b99;
+  --color-background: #f5f6fb;
+  --color-surface: #fff;
+  --color-border: #dce0ee;
+  --color-danger: #a13c35;
+  --color-danger-soft: #fff1ef;
+  --color-warning: #80591e;
+  --color-warning-soft: #fff7e7;
+  --color-focus: #4057b5;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --shadow-card: 0 4px 20px #173e4710;
+  --shadow-dialog: 0 24px 80px #102f4940;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  /* Compatibility aliases for the existing feature styles. */
+  --navy: var(--color-sidebar);
+  --teal: var(--color-primary);
+  --muted: var(--color-muted);
+  --line: var(--color-border);
+  --paper: var(--color-surface);
+}

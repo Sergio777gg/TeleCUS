@@ -1,0 +1,1 @@
+export function Brand(){return <a className="brand" href="/" aria-label="TeleCUS Unicauca inicio"><span className="brand-mark" aria-hidden="true">+</span><span>Tele<span className="brand-light">CUS</span><small className="brand-trial">UNICAUCA</small></span></a>;}

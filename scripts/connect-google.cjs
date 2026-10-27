@@ -1,0 +1,22 @@
+const fs=require('node:fs'),path=require('node:path'),http=require('node:http'),crypto=require('node:crypto');
+const root=path.resolve(__dirname,'..');process.chdir(root);if(fs.existsSync('.env'))process.loadEnvFile('.env');
+const file=process.env.GOOGLE_OAUTH_CLIENT_FILE||'data/google-client.json';
+const tokenFile=process.env.GOOGLE_TOKEN_FILE||'data/google-tokens.enc';
+const authorizationFile=process.env.GOOGLE_AUTHORIZATION_URL_FILE||'data/google-authorization-url.local.txt';
+if(!fs.existsSync(file)){console.error('Falta el cliente OAuth. Sigue docs/operations/CONECTAR_GOOGLE.md para crear la conexión.');process.exit(1);}
+const client=JSON.parse(fs.readFileSync(file,'utf8')).web;if(!client?.client_id||!client?.client_secret)throw Error('El cliente debe ser de tipo Aplicación web.');
+const redirect='http://localhost:8888/google/callback';if(!client.redirect_uris?.includes(redirect))throw Error('Registra '+redirect+' en el cliente de Google.');
+const state=crypto.randomBytes(32).toString('hex'),verifier=crypto.randomBytes(48).toString('base64url'),challenge=crypto.createHash('sha256').update(verifier).digest('base64url');
+const authorization=new URL('https://accounts.google.com/o/oauth2/v2/auth');authorization.search=new URLSearchParams({client_id:client.client_id,redirect_uri:redirect,response_type:'code',scope:'https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/gmail.send',access_type:'offline',prompt:'consent',login_hint:'citascus@gmail.com',state,code_challenge:challenge,code_challenge_method:'S256'}).toString();
+const server=http.createServer(async(req,res)=>{
+  const url=new URL(req.url,'http://localhost:8888');
+  if(url.pathname==='/google/connect'){res.writeHead(302,{Location:authorization.toString(),'Cache-Control':'no-store'});res.end();return;}
+  if(url.pathname!=='/google/callback'){res.writeHead(404);res.end();return;}
+  const returned=url.searchParams.get('state')||'';if(returned.length!==state.length||!crypto.timingSafeEqual(Buffer.from(returned),Buffer.from(state))){res.writeHead(400);res.end('Solicitud no válida.');return;}
+  try{const code=url.searchParams.get('code');if(!code)throw Error('El acceso no fue autorizado.');const response=await fetch('https://oauth2.googleapis.com/token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({client_id:client.client_id,client_secret:client.client_secret,code,code_verifier:verifier,redirect_uri:redirect,grant_type:'authorization_code'}),signal:AbortSignal.timeout(15000)});if(!response.ok)throw Error('Google no pudo completar la conexión.');const tokens=await response.json();if(!tokens.refresh_token)throw Error('No se recibió acceso permanente; vuelve a autorizar la conexión.');
+    const key=crypto.createHash('sha256').update(process.env.DEMO_SESSION_SECRET||'').digest();if(!process.env.DEMO_SESSION_SECRET)throw Error('Falta configurar TeleCUS.');const iv=crypto.randomBytes(12),cipher=crypto.createCipheriv('aes-256-gcm',key,iv),data=Buffer.concat([cipher.update(JSON.stringify(tokens)),cipher.final()]);fs.mkdirSync(path.dirname(path.resolve(tokenFile)),{recursive:true});fs.writeFileSync(tokenFile,JSON.stringify({iv:iv.toString('base64'),tag:cipher.getAuthTag().toString('base64'),data:data.toString('base64')}),{mode:0o600});
+    res.writeHead(200,{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store'});res.end('<h1>Google conectado con TeleCUS</h1><p>La cuenta autorizó Calendar y el envío de correos. Vuelve a TeleCUS para verificar la integración antes de activar operaciones reales.</p>');console.log('Autorización de Google guardada de forma cifrada. No se enviaron correos ni se crearon eventos.');server.close();clearTimeout(deadline);
+  }catch(e){res.writeHead(400,{'Content-Type':'text/plain; charset=utf-8'});res.end(e.message);console.error('No se completó la conexión de Google.');}
+});
+server.listen(8888,'127.0.0.1',()=>{fs.mkdirSync(path.dirname(path.resolve(authorizationFile)),{recursive:true});fs.writeFileSync(authorizationFile,authorization.toString(),{mode:0o600});console.log('Abre http://localhost:8888/google/connect en este PC e inicia sesión con citascus@gmail.com.');if(process.argv.includes('--open'))require('node:child_process').execFile('rundll32.exe',['url.dll,FileProtocolHandler','http://localhost:8888/google/connect'],{windowsHide:true},()=>{});});
+const deadline=setTimeout(()=>{server.close();console.log('La conexión venció. Ejecuta nuevamente CONECTAR_GOOGLE.cmd.');},15*60000);

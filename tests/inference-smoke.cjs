@@ -1,0 +1,6 @@
+// Explicit synthetic probe: no private configuration and no agenda operations.
+const fs=require('node:fs'),vm=require('node:vm');
+async function main(){const flow=JSON.parse(fs.readFileSync('node-red/flows.json','utf8')),code=flow.find(n=>n.id==='prepare').func;
+const ctx={msg:{req:{headers:{'x-telecus-internal':'synthetic'}},payload:{message:'Hola, quiero agendar una cita',context:{role:'PATIENT',today:'2026-10-19'}}},env:{get:k=>({TELECUS_INTERNAL_TOKEN:'synthetic',OLLAMA_URL:'http://127.0.0.1:11434',TELECUS_AI_MODEL:'telecus-local',TELECUS_AI_CONTEXT:'8192'})[k]}};
+const [request]=new vm.Script('(function(){'+code+'})()').runInNewContext(ctx),start=Date.now();const response=await fetch(request.url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(request.payload),signal:AbortSignal.timeout(45000)});const result=await response.json();let valid=false,intent;try{const p=JSON.parse(result.message.content);valid=true;intent=p.intent;}catch{}console.log(JSON.stringify({status:response.status,elapsedMs:Date.now()-start,validJson:valid,intent,done_reason:result.done_reason,eval_count:result.eval_count,error:result.error?'model_error':undefined}));}
+main().catch(e=>{console.error(JSON.stringify({status:'failed',code:e.cause?.code||e.name}));process.exitCode=1;});

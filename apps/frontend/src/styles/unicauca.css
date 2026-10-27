@@ -1,0 +1,36 @@
+/* Paleta institucional: azul #001282 y rojo #AD0000 como acento. */
+:root { --color-institutional-red:#ad0000; --color-focus:#4057b5; --color-background:#f6f7fa; --color-text:#252d43; --color-muted:#677187; --color-border:#e0e4ed; }
+.sidebar,.staff-side,.intro-panel { background:linear-gradient(160deg,#001282 0%,#091747 100%); border:0; }
+.brand-mark { background:#ffffff10; border:1px solid #ffffff50; color:#fff; box-shadow:inset 0 -3px 0 #ad0000; }
+.brand-light { color:#fff; }
+.brand-trial { display:block; margin-top:5px; color:#c5cdef; font-size:10px; letter-spacing:.12em; font-weight:600; }
+.section-number,.eyebrow,.chat-header .section-number { color:#66718c; }
+.intro-panel .eyebrow { color:#cbd3f5; }
+.workspace-label,.sidebar-help .eyebrow,.staff-nav-group-label { color:#b7c3ed; }
+.active-nav,.staff-nav.selected { background:#ffffff14; color:#fff; border:1px solid #ffffff24; box-shadow:none; }
+.active-nav { border-left:3px solid #fff; }
+.staff-nav.selected { border-left:3px solid #fff; }
+.new-chat,.account-text span,.sidebar-help>span,.sidebar-help>p:last-child { color:#d2d9ef; }
+.sidebar-help,.account { border-color:#ffffff22; }
+.avatar { background:#e9edf9; color:#001282; }
+.context-panel { background:#f6f7fa; }
+.context-panel ol,.patient-space,.patient-space summary,.patient-space button,.suggestion { color:#39455d; }
+.patient-space { background:#f8f9fc; }
+.patient-space button,.payment-secondary,.staff-refresh { background:#fff; color:#001282; border-color:#d9deec; }
+.assistant-mark,.login-profile-icon { background:#edf0fa; color:#001282; }
+.role-badge { background:#eef0f8; color:#253778; }
+.composer { border-color:#d9deea; box-shadow:0 4px 20px #17254b08; }
+.composer textarea { color:#252d43; }
+.composer:focus-within { border-color:#5c6bb0; box-shadow:0 0 0 3px #0012820c; }
+.suggestion:hover,.google-button>.login-profile:hover { background:#f2f4fb; border-color:#b9c3df; }
+.message .choice-button { background:#001282; border-color:#001282; box-shadow:none; }
+.message .choice-button:hover:not(:disabled) { background:#000d60; box-shadow:none; }
+.message-text { background:#f1f3f8; }
+.message-text a { color:#001282; }
+.message.user .message-text a { color:#e0e6ff; }
+.send:disabled { opacity:1; background:#e8ebf3; border-color:#e8ebf3; color:#8892ab; }
+.admin-tabs button[aria-selected=true] { background:#001282; border-color:#001282; }
+.staff-success,.payment-notice,.notifications-cleanup,.notification-list .notification-unread { background:#f0f3fb; color:#243a78; border-color:#d7def0; }
+.login-card,.context-note { box-shadow:0 4px 20px #18234306; }
+.chat-header { position:relative; }
+.chat-header::after { content:''; position:absolute; left:30px; bottom:-1px; width:32px; height:3px; border-radius:2px; background:#ad0000; }

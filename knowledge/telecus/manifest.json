@@ -1,0 +1,67 @@
+{
+  "corpus": "TeleCUS - Agendamiento",
+  "version": "2026-10-18",
+  "language": "es",
+  "scope": "orientacion_y_gestion_de_agendamiento",
+  "documents": [
+    {
+      "file": "00_LEEME_RAG_TELECUS.md",
+      "title": "TeleCUS - Guía del corpus RAG",
+      "category": "governance"
+    },
+    {
+      "file": "01_SERVICIO_Y_HORARIOS.md",
+      "title": "TeleCUS - Servicio, horario y capacidad del piloto",
+      "category": "service_information"
+    },
+    {
+      "file": "02_SOLICITUD_Y_PRERESERVA.md",
+      "title": "TeleCUS - Solicitud de cita y pre-reserva",
+      "category": "scheduling"
+    },
+    {
+      "file": "03_PAGO_MANUAL_Y_CONFIRMACION.md",
+      "title": "TeleCUS - Pago externo, verificación manual y confirmación",
+      "category": "payment_and_confirmation"
+    },
+    {
+      "file": "04_CALENDAR_MEET_Y_NOTIFICACIONES.md",
+      "title": "TeleCUS - Confirmación en Calendar, Meet y notificaciones",
+      "category": "calendar_and_notifications"
+    },
+    {
+      "file": "05_CONSULTA_REPROGRAMACION_Y_CANCELACION.md",
+      "title": "TeleCUS - Consultar, reprogramar y cancelar citas",
+      "category": "appointment_management"
+    },
+    {
+      "file": "06_ROLES_ACCESO_Y_PRIVACIDAD.md",
+      "title": "TeleCUS - Roles, permisos y privacidad",
+      "category": "access_control"
+    },
+    {
+      "file": "07_INTEGRACIONES_Y_LIMITES_DEL_MODULO.md",
+      "title": "TeleCUS - Integraciones y límites del módulo de agendamiento",
+      "category": "architecture"
+    },
+    {
+      "file": "08_FAQ_PACIENTE.md",
+      "title": "TeleCUS - Preguntas frecuentes de agendamiento",
+      "category": "faq"
+    },
+    {
+      "file": "09_OPERACION_ADMINISTRATIVA_AGENDAMIENTO.md",
+      "title": "TeleCUS - Operación administrativa del agendamiento",
+      "category": "admin_operations"
+    }
+  ],
+  "important_rules": [
+    "Horario actual del piloto: lunes 14:00-16:00 America/Bogota.",
+    "Duracion maxima de la cita: 30 minutos.",
+    "La reserva se considera pre-reserva hasta verificar el pago.",
+    "El pago es externo y actualmente se verifica manualmente por un administrativo.",
+    "Calendar/Meet se confirman despues de verificar el pago.",
+    "El paciente solo puede consultar sus propias citas.",
+    "El RAG no es fuente de informacion dinamica de citas o pagos."
+  ]
+}

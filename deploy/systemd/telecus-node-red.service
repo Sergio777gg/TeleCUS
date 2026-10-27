@@ -1,0 +1,24 @@
+[Unit]
+Description=TeleCUS internal interpretation and RAG flow
+Wants=network-online.target ollama.service
+After=network-online.target ollama.service
+
+[Service]
+Type=simple
+User=telecus
+Group=telecus
+WorkingDirectory=/opt/telecus/current
+EnvironmentFile=/etc/telecus/node-red.env
+ExecStart=/usr/bin/node ${NODE_RED_ENTRY} --userDir /var/lib/telecus/node-red --settings /opt/telecus/current/node-red/settings.cjs /opt/telecus/current/node-red/flows.json
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=120
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/telecus/node-red
+
+[Install]
+WantedBy=multi-user.target

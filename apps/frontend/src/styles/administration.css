@@ -1,0 +1,30 @@
+.admin-panel{width:min(980px,96vw);max-height:92dvh;max-width:96vw;border:1px solid #d2e1e5;border-radius:18px;padding:0;color:#174351;background:#fff;box-shadow:0 24px 80px #092b3c35}
+.admin-panel[open]{display:flex;flex-direction:column}.admin-panel::backdrop,.receipt-preview::backdrop,.support-dialog::backdrop{background:#0a303f77}
+.admin-content{overflow:auto;min-height:0;padding:24px}.admin-tabs{display:flex;gap:6px;padding:6px 20px 14px;overflow:auto;border-bottom:1px solid #dce8eb;flex-shrink:0}
+.admin-tabs button{white-space:nowrap;border:1px solid #c7dce0;background:#f5f9fa;padding:10px 13px;border-radius:10px;color:#174351;cursor:pointer}.admin-tabs button[aria-selected=true]{background:#087d81;color:white;border-color:#087d81}
+.admin-panel h3{margin-top:0}.admin-panel h4{margin:0 0 8px}.admin-panel p{line-height:1.6}.admin-panel label{display:flex;flex-direction:column;gap:7px;font-weight:600}
+.admin-panel input,.admin-panel select,.admin-panel textarea{font:inherit;border:1px solid #aac6cd;background:white;color:#174351;padding:10px 12px;border-radius:8px;max-width:100%;min-width:0}
+.admin-panel input[readonly]{background:#f2f6f7}.admin-form{display:grid;gap:15px;margin:20px 0;padding:18px;background:#f7fafb;border:1px solid #d9e6e9;border-radius:12px}
+.admin-filters{display:flex;gap:12px;align-items:end;flex-wrap:wrap}.admin-filters form{display:flex;gap:8px;align-items:end}.admin-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px;margin:18px 0}
+.admin-list article{border:1px solid #d3e3e7;border-radius:12px;padding:17px;overflow-wrap:anywhere}.admin-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:12px 0}
+.admin-panel .payment-link,.admin-panel .payment-secondary{width:auto;margin:0;min-height:42px}.admin-checkbox{display:flex!important;flex-direction:row!important;align-items:flex-start;margin:20px 0;line-height:1.55;font-weight:400!important}.admin-checkbox input{width:18px;height:18px;flex-shrink:0;margin:3px 0}
+.admin-confirm{background:#eff7f7;padding:22px;border:1px solid #b9dcda;border-radius:12px;margin:10px 0 20px}.admin-confirm dl{display:grid;grid-template-columns:100px 1fr;gap:10px}.admin-confirm dd{margin:0;overflow-wrap:anywhere}
+.admin-rag-test{margin:20px 0}.admin-rag-test pre{white-space:pre-wrap;font:inherit;line-height:1.5}.admin-panel textarea{resize:vertical;line-height:1.55}
+.receipt-preview{width:min(900px,96vw);max-width:96vw;max-height:94dvh;padding:0;border:1px solid #c3d9dd;border-radius:16px;color:#174351}
+.receipt-preview[open],.support-dialog[open]{display:flex;flex-direction:column}.receipt-preview .payment-header{flex-shrink:0}.receipt-preview h2{font-size:1.05rem;overflow-wrap:anywhere}
+.receipt-preview-content{padding:18px;overflow:auto;min-height:0}.receipt-preview canvas,.receipt-image{max-width:100%;height:auto;display:block;margin:14px auto}.receipt-image{object-fit:contain;max-height:70dvh}
+.receipt-pagination{display:flex;gap:12px;justify-content:center;align-items:center;flex-wrap:wrap}.receipt-pagination button{font:inherit;padding:10px;border:1px solid #bed6da;border-radius:8px;background:#f2f8f9;color:#174351}
+.support-dialog{max-width:94vw;width:480px;max-height:90dvh;padding:0;border:1px solid #c3d9dd;border-radius:16px;color:#174351}
+.handoff-card{border:1px solid #bcdbd7;border-radius:10px;background:#eff8f6;padding:14px;margin-top:12px}.handoff-card p{margin:0 0 10px}
+.payment-withdrawal{padding:14px;border:1px solid #d9bf88;background:#fff8e9;border-radius:10px;margin-top:12px}.payment-receipt-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.payment-receipt-actions .payment-secondary{width:auto}
+@media(max-width:760px){.admin-panel{width:96vw;max-height:95dvh}.admin-content{padding:16px}.admin-tabs{padding-left:14px;padding-right:14px}.admin-filters,.admin-filters form{display:grid;grid-template-columns:1fr;width:100%}.admin-confirm{padding:15px}.admin-confirm dl{grid-template-columns:1fr;gap:4px}.admin-confirm dd{margin-bottom:10px}.admin-actions>*{flex:1;min-width:130px}.receipt-preview-content{padding:12px}.header-actions{flex-wrap:wrap;justify-content:flex-end;gap:7px}}
+
+.receipt-preview canvas.receipt-zoom-2,.receipt-image.receipt-zoom-2{width:150%;max-width:none;max-height:none}.receipt-preview canvas.receipt-zoom-3,.receipt-image.receipt-zoom-3{width:200%;max-width:none;max-height:none}
+
+.admin-section-select{display:none!important}.admin-loading{padding:10px 14px;background:#eef6f8;border-radius:8px}.admin-dirty{padding:10px 14px;border-left:3px solid #b07720;background:#fff8e8}.admin-unsaved{padding:20px;border:1px solid #d4ba87;border-radius:12px;background:#fffaf0}.admin-unsaved h3:focus{outline:2px solid #087d81;outline-offset:4px}
+.admin-badge{display:inline-block;padding:4px 10px;margin:0 0 12px;border-radius:999px;font-size:.85rem;font-weight:600;background:#edf2f4}.admin-badge.is-active{color:#175b43;background:#e9f5ef}.admin-badge.is-inactive{color:#596168;background:#eef0f2}.admin-footer{display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between;border-top:1px solid #dce8eb;padding-top:18px;margin-top:22px}.admin-footer span{font-size:.85rem;color:#526e79}
+@media(max-width:760px){.admin-tabs{display:none}.admin-section-select{display:flex!important;margin:0;padding:0 16px 14px;flex-shrink:0}.admin-section-select select{width:100%;min-height:44px}.admin-footer{align-items:stretch;flex-direction:column}}
+
+.admin-days{display:flex;flex-wrap:wrap;gap:.6rem 1.2rem}.admin-form fieldset{border:1px solid #c4dce1;border-radius:.6rem;padding:1rem}.admin-days .admin-checkbox{min-width:8rem;margin:4px 0}
+
+.admin-panel--embedded{width:100%;max-width:none;max-height:none;box-shadow:none;border-radius:12px}.admin-panel--embedded[hidden]{display:none}.admin-panel--embedded>.admin-content{overflow:visible}.admin-panel--embedded>.payment-header{padding:20px 24px}

@@ -1,0 +1,25 @@
+[Unit]
+Description=TeleCUS backend and embedded workers
+Wants=network-online.target
+After=network-online.target telecus-node-red.service
+Requires=telecus-node-red.service
+
+[Service]
+Type=simple
+User=telecus
+Group=telecus
+WorkingDirectory=/opt/telecus/current
+EnvironmentFile=/etc/telecus/api.env
+ExecStart=/usr/bin/node apps/backend/dist/main.js
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=300
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/telecus
+
+[Install]
+WantedBy=multi-user.target

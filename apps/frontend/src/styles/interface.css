@@ -1,0 +1,176 @@
+/* Shared controls and surfaces. Layout remains owned by each feature stylesheet. */
+body { color: var(--color-text); background: var(--color-background); }
+button, input, select, textarea { font: inherit; }
+button, a, input, select, textarea { -webkit-tap-highlight-color: transparent; }
+button, input:not([type=checkbox]), select { min-height: 44px; }
+button { font-weight: 600; transition: background .15s, border-color .15s, box-shadow .15s; }
+:where(button, a, input, select, textarea, summary):focus-visible {
+  outline: 3px solid var(--color-focus); outline-offset: 3px;
+}
+:where(input, select, textarea):not([type=checkbox]) {
+  color: var(--color-text); border-color: var(--color-border); border-radius: var(--radius-sm);
+}
+input[type=checkbox] { accent-color: var(--color-primary); }
+:where(.staff-primary, .payment-link, .confirm-button, .send),
+.staff-actions button.staff-primary, .staff-item-actions button.staff-primary {
+  background: var(--color-primary); color: #fff; border: 1px solid var(--color-primary);
+  border-radius: var(--radius-sm); font-weight: 650;
+}
+:where(.staff-primary, .payment-link, .confirm-button, .send):hover:not(:disabled),
+.staff-actions button.staff-primary:hover:not(:disabled),
+.staff-item-actions button.staff-primary:hover:not(:disabled) {
+  background: var(--color-primary-hover); border-color: var(--color-primary-hover);
+}
+.staff-refresh, .staff-actions button:not(.staff-primary),
+.staff-item-actions button:not(.staff-primary):not(.staff-reject),
+.payment-secondary, .dismiss-button, .notifications-tools button,
+.notification-item-footer button, .notification-more, .notifications-cleanup button {
+  background: #fff; color: var(--color-primary-hover); border: 1px solid #b8d0c9;
+  border-radius: var(--radius-sm); font-size: 13px; padding: 10px 14px;
+}
+:where(.staff-refresh, .payment-secondary, .dismiss-button, .notification-more):hover:not(:disabled),
+.notifications-tools button:hover:not(:disabled), .notification-item-footer button:hover:not(:disabled) {
+  background: var(--color-primary-soft); border-color: #7eafa0;
+}
+.staff-item-actions .staff-reject, .staff-danger {
+  color: var(--color-danger) !important; background: var(--color-danger-soft); border-color: #e2b8b1 !important;
+}
+.staff-error, .payment-error, .admin-error { background: var(--color-danger-soft); color: var(--color-danger); }
+.staff-success, .payment-notice, .notifications-cleanup { background: var(--color-primary-soft); color: #225e49; border-color: #b9dacc; }
+.section-number, .eyebrow { letter-spacing: .12em; font-weight: 700; }
+.mode-note { display: flex; align-items: center; gap: 8px; padding: 10px 24px; font-size: 12px; }
+.mode-note::before { content: ''; width: 7px; height: 7px; flex: 0 0 7px; background: currentColor; border-radius: 50%; }
+.mode-note--live { background: #edf7f1; color: #28644c; }
+.mode-note--demo { background: var(--color-warning-soft); color: var(--color-warning); }
+.mode-note--readonly { background: #edf3f7; color: #476477; }
+
+/* Login: clear entry points, with the same brand and action colour as the app. */
+.intro-panel { background: var(--color-sidebar); }
+.intro-copy h1 { font-weight: 650; }
+.login-panel { background: var(--color-background); }
+.login-card { max-width: 420px; padding: 32px; background: #fff; border: 1px solid var(--color-border); border-radius: 22px; box-shadow: var(--shadow-card); }
+.login-card h2 { font-size: 30px; margin-top: 18px; }
+.login-card .mode-note { margin: 18px 0; }
+.google-button { margin-top: 24px; gap: 12px; }
+.google-button > .login-profile { display: flex; align-items: center; gap: 14px; padding: 14px; border-radius: var(--radius-md); text-align: left; border-color: var(--color-border); }
+.login-profile-icon { display: grid; place-items: center; width: 40px; height: 40px; flex-shrink: 0; border-radius: 12px; color: var(--color-primary-hover); background: var(--color-primary-soft); font-size: 18px; }
+.login-profile-copy { display: grid; gap: 4px; flex: 1; }
+.login-profile-copy strong { font-size: 14px; }
+.login-profile-copy small { font-weight: 400; color: var(--color-muted); font-size: 12px; }
+.google-button > .login-google { background: var(--color-primary); color: #fff; border-color: var(--color-primary); font-weight: 650; border-radius: 10px; }
+.google-button > .login-google:hover { background: var(--color-primary-hover); color: #fff; }
+
+/* Staff shell: grouped navigation and a clear card hierarchy. */
+.staff-shell { background: var(--color-background); color: var(--color-text); }
+.staff-side { background: var(--color-sidebar); gap: 20px; }
+.staff-navigation { flex: 1; min-height: 0; }
+.staff-nav-group { display: grid; gap: 4px; }
+.staff-nav-group + .staff-nav-group { margin-top: 20px; }
+.staff-nav-group-label { padding: 0 14px; margin: 0 0 6px; font-size: 10px; letter-spacing: .13em; text-transform: uppercase; color: #a5c3cb; font-weight: 650; }
+.staff-nav { display: flex; align-items: center; gap: 11px; position: relative; font-size: 13px; padding: 11px 14px; }
+.staff-nav svg { flex: 0 0 18px; opacity: .8; }
+.staff-nav:hover { background: #ffffff0c; }
+.staff-nav.selected { background: #e4f3ed; color: #164c40; font-weight: 700; box-shadow: 0 2px 8px #062e3520; }
+.staff-nav.selected svg { opacity: 1; }
+.staff-account { background: #ffffff07; border: 1px solid #ffffff17; border-radius: 12px; padding: 14px; font-size: 12px; }
+.staff-account button { font-size: 12px; text-align: center; border-color: #ffffff30; }
+.staff-header { padding: 26px 36px; border-color: var(--color-border); }
+.staff-header h1 { font-size: 27px; letter-spacing: -.7px; font-weight: 700; }
+.staff-header .section-number { font-size: 10px; }
+.staff-content { padding: 32px 36px; }
+.staff-content > h2 { letter-spacing: -.4px; font-size: 24px; }
+.staff-stats { gap: 18px; }
+.staff-stats button { position: relative; border: 1px solid var(--color-border); box-shadow: var(--shadow-card); border-radius: var(--radius-lg); padding: 24px; gap: 12px; }
+.staff-stats button::after { content: '↗'; position: absolute; right: 20px; top: 18px; color: var(--color-primary); font-size: 20px; }
+.staff-stats button > span { max-width: 85%; min-height: 40px; line-height: 1.5; }
+.staff-stats button:hover { border-color: #90bbaa; box-shadow: 0 5px 22px #173e4718; }
+.staff-stats strong { font-size: 38px; font-weight: 700; letter-spacing: -1px; }
+.staff-stats small { font-weight: 600; color: var(--color-primary-hover); }
+.staff-items { gap: 16px; }
+.staff-item { padding: 24px; border-color: var(--color-border); border-radius: var(--radius-md); box-shadow: 0 2px 12px #173e4707; }
+.staff-item + .staff-item { margin-top: 0; }
+.staff-item h3 { font-weight: 650; font-size: 17px; }
+.staff-item p { color: var(--color-muted); line-height: 1.65; }
+.staff-status { font-weight: 600; font-size: 12px; background: var(--color-primary-soft); color: #285e4d; }
+.staff-status.pending { background: var(--color-warning-soft); color: var(--color-warning); }
+.staff-filters, .staff-availability { padding: 18px 20px; background: #fff; border: 1px solid var(--color-border); border-radius: var(--radius-md); }
+.staff-filters label, .staff-availability label { font-size: 13px; color: var(--color-muted); }
+.staff-document, .admin-list article, .payment-appointment, .notification-list li { border-color: var(--color-border); border-radius: var(--radius-md); }
+.admin-form { background: #f7faf8; border-color: var(--color-border); padding: 24px; }
+.admin-form label:not(.admin-checkbox) { display: grid; gap: 8px; font-size: 13px; font-weight: 600; }
+.admin-form :is(input, select, textarea):not([type=checkbox]) { width: 100%; padding: 11px 12px; border: 1px solid #bbd0cb; background: #fff; border-radius: var(--radius-sm); }
+.admin-tabs button[aria-selected=true] { background: var(--color-primary); border-color: var(--color-primary); }
+.admin-tabs button { font-size: 13px; }
+.staff-table-wrap th { background: #f4f8f6; font-weight: 650; }
+
+/* Patient and shared overlays. */
+.sidebar { background: var(--color-sidebar); }
+.active-nav { background: #e4f3ed; color: #164c40; border-color: transparent; font-weight: 600; }
+.chat-header { padding: 24px 30px; }
+.chat-header h1 { font-size: 19px; font-weight: 650; }
+.context-panel { background: var(--color-background); padding: 36px 24px; }
+.context-panel h2 { font-size: 21px; }
+.context-note { background: #fff; border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 18px; box-shadow: var(--shadow-card); }
+.suggestion { background: #f7fbf9; border-color: #c7ddd3; color: #205944; font-weight: 600; border-radius: 12px; }
+.suggestion:hover { background: var(--color-primary-soft); border-color: #82b59f; }
+.message-text { background: #eff6f5; border-radius: 4px 16px 16px 16px; font-size: 15px; line-height: 1.8; }
+.message.user .message-text { background: var(--color-sidebar); border-radius: 16px 4px 16px 16px; }
+.message .choice-button { background: var(--color-primary); border-color: var(--color-primary-hover); box-shadow: 0 2px 0 #044f3d; font-size: 14px; }
+.message .choice-button:hover:not(:disabled) { background: var(--color-primary-hover); }
+.composer { border-color: #bbd0cb; background: #fff; border-radius: 16px; box-shadow: 0 4px 18px #163c4810; }
+.role-badge { border-radius: 999px; background: var(--color-primary-soft); color: var(--color-primary-hover); }
+.patient-space { background: #f7fbf9; border-color: var(--color-border); }
+.notification-bell { min-height: 44px; color: var(--color-primary-hover); border-color: var(--color-border); border-radius: 10px; }
+.notification-count { background: var(--color-primary); }
+.notifications-dialog, .payment-dialog, .admin-panel, .receipt-preview, .support-dialog, .staff-review-dialog { color: var(--color-text); border: 1px solid var(--color-border); border-radius: var(--radius-lg); box-shadow: var(--shadow-dialog); }
+.notifications-dialog::backdrop, .payment-dialog::backdrop, .admin-panel::backdrop, .receipt-preview::backdrop, .support-dialog::backdrop, .staff-review-dialog::backdrop { background: #0d303c8c; }
+.notifications-header h2, .payment-header h2, .staff-review-dialog h2 { font-size: 23px; font-weight: 700; letter-spacing: -.4px; }
+.notification-list .notification-unread { background: #f0f8f3; border-color: #c1dacc; }
+.notification-list h3 { font-size: 14px; line-height: 1.5; }
+.notification-list p, .notifications-intro, .notifications-footnote { line-height: 1.75; }
+.payment-close, .notification-close { min-width: 44px; min-height: 44px; border-radius: 10px; }
+.payment-close:hover, .notification-close:hover { background: var(--color-primary-soft); }
+
+@media (min-width: 801px) {
+  .staff-side { position: sticky; top: 0; height: 100dvh; overflow: hidden; }
+  .staff-side .workspace-label { margin: 10px 10px 0; }
+  .staff-navigation { overflow-y: auto; scrollbar-width: thin; scrollbar-color: #47717e transparent; }
+  .staff-side .staff-navigation { display: block; }
+}
+@media (max-width: 800px) {
+  .staff-side { gap: 12px; }
+  .staff-mobile-nav { font-size: 12px; }
+  .staff-account { padding: 10px 12px; }
+  .staff-header { padding: 22px 20px; }
+  .staff-header h1 { font-size: 24px; }
+  .staff-content { padding: 24px 20px; }
+  .staff-item { padding: 18px; }
+  .staff-filters, .staff-availability { padding: 16px; }
+  .staff-stats button { padding: 20px; }
+  .staff-stats button::after { right: 14px; top: 15px; }
+}
+@media (max-width: 760px) {
+  .login-panel { padding: 24px 20px 60px; }
+  .login-card { padding: 24px; }
+  .login-card h2 { font-size: 27px; }
+  .chat-header { padding: 16px 20px; flex-wrap: wrap; }
+  .chat-header h1 { font-size: 17px; }
+  .header-actions { margin-left: auto; }
+  .mode-note { padding-inline: 20px; }
+  .message-text { font-size: 15px; }
+  .admin-form { padding: 16px; }
+  .staff-stats strong { font-size: 32px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; scroll-behavior: auto !important; }
+}
+
+/* Keep useful conversation space when a phone is held horizontally. */
+@media (max-width: 760px) and (max-height: 500px) {
+  .chat-header { padding: 6px 12px; flex-wrap: nowrap; gap: 8px; }
+  .chat-header > div:first-child { min-width: 0; }
+  .chat-header .section-number, .chat-header .role-badge { display: none; }
+  .chat-header h1 { font-size: 14px; line-height: 1.25; }
+  .chat-header .header-actions { flex-shrink: 0; gap: 6px; }
+  .messages { padding: 10px 14px; }
+}

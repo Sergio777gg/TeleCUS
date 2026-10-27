@@ -1,0 +1,1 @@
+export function MessageText({text}){return text.split(/(https:\/\/[^\s]+)/g).map((part,i)=>part.startsWith('https://')?<a key={i} href={part} target="_blank" rel="noopener noreferrer">{part}</a>:part);}
