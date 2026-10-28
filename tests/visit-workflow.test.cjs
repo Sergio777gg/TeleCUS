@@ -12,12 +12,15 @@ async function fixture(){
  return {db,repo,domain,workspace,users,date,turn,input,policy,reserve,close:()=>db.close()};
 }
 test('catálogo aplica los cinco motivos y conserva tipos históricos solo para lectura',async()=>{
- const {VISIT_TYPES,visitTypeAnswer,visitType,visitTypeQuestion}=await import('../apps/backend/dist/application/visit-policy.js');
+ const {VISIT_TYPES,visitTypeAnswer,visitType,visitTypeQuestion,priorityCriteria,emergencyCriteria}=await import('../apps/backend/dist/application/visit-policy.js');
  assert.equal(VISIT_TYPES.length,5);
  assert.deepEqual(VISIT_TYPES.map(t=>t.code),['NON_URGENT_GUIDANCE','RESULTS_REVIEW','FOLLOW_UP','REFERRALS_ORDERS','MEDICATION_PRESCRIPTION']);
  for(const t of VISIT_TYPES)assert.equal(visitTypeAnswer('Tipo de cita: '+t.code),t.code);
  assert.ok(visitType('GENERAL_CERTIFICATE'));assert.equal(visitTypeAnswer('Tipo de cita: GENERAL_CERTIFICATE'),null);
- for(const criterion of ['otoscopia','disminución de la orina','labios azulados','convulsión','sobredosis','agitación grave'])assert.ok(visitTypeQuestion.includes(criterion));
+ for(const criterion of ['otoscopia','disminución de la orina','labios azulados','convulsión','sobredosis','agitación grave']){
+  assert.ok((priorityCriteria+' '+emergencyCriteria).includes(criterion));
+  assert.equal(visitTypeQuestion.includes(criterion),false);
+ }
 });
 test('rutas presencial y urgente no proponen ni crean citas y descartan una reserva pendiente',async()=>{
  const f=await fixture();try{

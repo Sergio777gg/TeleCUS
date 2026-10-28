@@ -91,7 +91,7 @@ Este repositorio excluye credenciales, configuración privada, datos, registros,
 
 ## Criterios de teleconsulta y pruebas de seguridad
 
-El catálogo ofrece valoración sin examen físico, revisión de laboratorios, control según criterio médico, remisiones/órdenes y fórmulas. Los criterios de valoración presencial prioritaria y los signos de alarma aparecen en el menú. Seleccionar una de esas rutas por botón, nombre o número detiene el agendamiento y descarta propuestas pendientes; no cancela citas existentes. Es una selección declarada por el usuario, no un diagnóstico ni detección exhaustiva de síntomas en texto libre.
+El catálogo ofrece valoración sin examen físico, revisión de laboratorios, control según criterio médico, remisiones/órdenes y fórmulas. El menú muestra las opciones de atención presencial prioritaria y urgencias, sin el bloque extenso de criterios clínicos. Seleccionar una de esas rutas por botón, nombre o número detiene el agendamiento y descarta propuestas pendientes; no cancela citas existentes. Es una selección declarada por el usuario, no un diagnóstico ni detección exhaustiva de síntomas en texto libre.
 
 Antes de activar estos tipos en Supabase, aplicar `scripts/sql/017-consultation-criteria.sql` después de 016 y realizar una prueba de integración. Conserva tipos históricos y el envoltorio de permisos y motivos de rechazo de 015. La migración no se ha ejecutado contra una base real durante estas pruebas. Reiniciar el backend y cargar el flujo actualizado `node-red/flows.json` mediante el procedimiento habitual.
 

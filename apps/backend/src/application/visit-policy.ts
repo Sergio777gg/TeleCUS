@@ -41,5 +41,5 @@ export function visitTypeAnswer(message:string,allowBare=false):VisitType|null{
   if(/^(?:orientacion(?: medica)?(?: no urgente)?)$/.test(contribution))return 'NON_URGENT_GUIDANCE';
   return null;
 }
-export const visitTypeQuestion='¿Qué tipo de atención necesitas?\n'+[...VISIT_TYPES,...CARE_ROUTES].map((t,i)=>`${i+1}. ${t.label}`).join('\n')+'\n\nAntes de elegir teleconsulta, revisa estos criterios. Si presentas alguno, elige la ruta presencial o de urgencias, aunque tu motivo sea revisar laboratorios, un control o una fórmula.\n\nValoración presencial prioritaria (sin signos de alarma): '+priorityCriteria+'\n\nUrgencias — atención inmediata: '+emergencyCriteria+'\n\nSi no sabes cuál elegir, pide orientación al equipo de TeleCUS; elegir un motivo no confirma su pertinencia clínica.';
+export const visitTypeQuestion='¿Qué tipo de atención necesitas?\n'+[...VISIT_TYPES,...CARE_ROUTES].map((t,i)=>`${i+1}. ${t.label}`).join('\n');
 export function financiallyCleared(a:{payment_status:string;status:string}){return a.payment_status==='VERIFIED'||a.payment_status==='NOT_REQUIRED'&&['CONFIRMED','RESCHEDULED','COMPLETED'].includes(a.status);}
