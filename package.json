@@ -20,7 +20,9 @@
     "check:architecture": "node scripts/check-architecture.cjs",
     "test:behaviour": "npm run build --workspace @telecus/backend && node --test tests/behaviour-battery.test.cjs",
     "evaluate:behaviour": "npm run build --workspace @telecus/backend && node tests/evaluation/behaviour-run.cjs",
-    "prepare:share": "npm run check:layout && npm run check:architecture && npm run check && node scripts/package-release.cjs --folder"
+    "prepare:share": "npm run check:layout && npm run check:architecture && npm run check && node scripts/package-release.cjs --folder",
+    "test:security": "npm run build --workspace @telecus/backend && node --test --test-isolation=none tests/security-boundaries.test.cjs tests/origin-policy.test.cjs tests/http-modules.test.cjs tests/payment-http.test.cjs tests/clinical-documents.test.cjs tests/release-policy.test.cjs",
+    "test:prompt-injection:local": "npm run build --workspace @telecus/backend && node tests/prompt-injection-local.cjs"
   },
   "engines": {
     "node": ">=22.13.0"

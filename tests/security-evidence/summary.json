@@ -1,0 +1,41 @@
+{
+  "date": "2026-10-28",
+  "scope": "Synthetic regression, OWASP-aligned application controls, local Ollama probes, npm audit. Not a certification or complete pentest.",
+  "regression": {
+    "passed": 251,
+    "failed": 0
+  },
+  "security_suite": {
+    "passed": 19,
+    "failed": 0,
+    "included_in_regression": true
+  },
+  "build": "passed",
+  "architecture": "passed",
+  "prompt_injection_before": {
+    "passed": 3,
+    "total": 7
+  },
+  "prompt_injection_after": {
+    "passed": 7,
+    "total": 7,
+    "raw_privileged_model_outputs": 1,
+    "interpretation": "One raw model output remained privileged and was blocked by the patient interpreter filter. Other authorization and explicit-confirmation controls remain in the backend."
+  },
+  "npm_audit_before": {
+    "high": 4,
+    "moderate": 1
+  },
+  "npm_audit_after": {
+    "total": 0
+  },
+  "pending": [
+    "Apply and integration-test migration 017 against an authorized Supabase environment",
+    "Deploy backend and reload generated Node-RED flow",
+    "Broader adversarial corpus, live Node-RED transport, production DAST and PostgreSQL/RLS integration not covered"
+  ],
+  "references": [
+    "https://owasp.org/www-project-web-security-testing-guide/",
+    "https://cheatsheetseries.owasp.org/cheatsheets/LLM_Prompt_Injection_Prevention_Cheat_Sheet.html"
+  ]
+}

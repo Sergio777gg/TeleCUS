@@ -15,7 +15,13 @@ export class NodeRedInterpreter implements InterpretationPort {
       try{response=await this.transport(this.endpoint,{method:'POST',headers:{'Content-Type':'application/json','X-TeleCUS-Internal':this.internalToken},body:JSON.stringify({message,context,...(stage?{stage,normalizedMessage:normalizedDialogueText(message)}:{})}),signal});}
       catch(error:any){if(signal.aborted)throw signal.reason;if(error?.name==='TimeoutError')throw error;throw new ServiceUnavailableException('El servicio de interpretación no está disponible. Conservo tu gestión; puedes reintentar.');}
       if(!response.ok)throw new ServiceUnavailableException('El asistente local no está disponible. Tu solicitud no modificó ninguna cita.');
-      try{return await response.json();}catch{throw new ServiceUnavailableException('El servicio de interpretación devolvió una respuesta inválida. Conservo tu gestión; puedes reintentar.');}
+      try{
+        const result=await response.json();
+        if(!result||typeof result!=='object'||Array.isArray(result))throw new Error('Invalid model object');
+        // The transport cannot promote a patient to a staff operation or confirm by text.
+        if(context.role==='PATIENT'&&['verify_payment','complete','assign_doctor','approve_change','reject_change','confirm'].includes(result.intent))return candidate({dialogue_act:'clarify',dialogue_target:'task'});
+        return result;
+      }catch{throw new ServiceUnavailableException('El servicio de interpretación devolvió una respuesta inválida. Conservo tu gestión; puedes reintentar.');}
     };
     const slot=context.dialogue?.expectedSlot||context.awaiting;
     const candidate=(fields:Record<string,unknown>)=>({intent:'unknown',appointment_code:null,doctor_name:null,date:null,time:null,reason:null,request_id:null,date_expression:null,navigation:null,option_number:null,reference_index:null,request_view:null,request_type:null,request_state:null,dialogue_act:null,dialogue_target:null,reference_time:null,...fields});

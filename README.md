@@ -88,3 +88,15 @@ Los documentos y comprobantes se almacenan cifrados en disco privado, con sus me
 La arquitectura, el Excel de requisitos y casos, el manual de instalación y el informe Word de pruebas se entregan por separado en la carpeta de documentación. Las capturas y los registros de evidencias permanecen allí.
 
 Este repositorio excluye credenciales, configuración privada, datos, registros, dependencias instaladas, compilados, documentación formal, capturas y vistas. Conserva el README y el corpus de conocimiento como recursos versionados. No publiques `.env`, `ACCESO_NODE_RED.local.txt`, `data/` ni `logs/`.
+
+## Criterios de teleconsulta y pruebas de seguridad
+
+El catálogo ofrece valoración sin examen físico, revisión de laboratorios, control según criterio médico, remisiones/órdenes y fórmulas. Los criterios de valoración presencial prioritaria y los signos de alarma aparecen en el menú. Seleccionar una de esas rutas por botón, nombre o número detiene el agendamiento y descarta propuestas pendientes; no cancela citas existentes. Es una selección declarada por el usuario, no un diagnóstico ni detección exhaustiva de síntomas en texto libre.
+
+Antes de activar estos tipos en Supabase, aplicar `scripts/sql/017-consultation-criteria.sql` después de 016 y realizar una prueba de integración. Conserva tipos históricos y el envoltorio de permisos y motivos de rechazo de 015. La migración no se ha ejecutado contra una base real durante estas pruebas. Reiniciar el backend y cargar el flujo actualizado `node-red/flows.json` mediante el procedimiento habitual.
+
+- `npm run test:security`: pruebas sintéticas de permisos, aislamiento entre usuarios, confirmaciones, validación, límites, CORS, archivos y RAG. Los casos adversarios del intérprete simulan deliberadamente respuestas de un modelo comprometido.
+- `npm run test:prompt-injection:local -- tests/security-evidence/local-model.json`: requiere Ollama local y el modelo `telecus-local`. Ejecuta inferencia real con las funciones generadas de Node-RED en una VM; no prueba un servidor Node-RED desplegado ni usa datos o integraciones reales.
+- `npm audit --audit-level=moderate`: consulta las alertas de dependencias; no representa un pentest.
+
+La metodología se basa en [OWASP WSTG](https://owasp.org/www-project-web-security-testing-guide/) y la [guía OWASP de prevención de prompt injection](https://cheatsheetseries.owasp.org/cheatsheets/LLM_Prompt_Injection_Prevention_Cheat_Sheet.html). No es una certificación OWASP ni garantiza inmunidad a inyecciones. El informe JSON distingue salidas crudas privilegiadas del modelo y resultados después del filtro del intérprete. El backend conserva las comprobaciones de permisos y la confirmación explícita aunque el modelo falle. Las citas de fuentes validan procedencia, no la veracidad ni la seguridad semántica de toda respuesta RAG.

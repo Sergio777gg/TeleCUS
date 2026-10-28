@@ -10,7 +10,7 @@ import {focusedPatientRequest,patientRequestFollowUp} from './application/reques
 import { ChatInput, Intent, Profile, Proposal, Reply } from './types.js';
 import { changeChoices, ConversationContext, numbered, operationalQuery, personalRequestQuery, requestQuery, roleChoices, Selection } from './conversation.js';
 import { calendarAnswer } from './calendar.js';
-import {VISIT_TYPES,LEGACY_VISIT_POLICY,visitType,visitTypeQuestion,financiallyCleared} from './application/visit-policy.js';
+import {VISIT_TYPES,CARE_ROUTES,careRouteAnswer,careRouteReply,LEGACY_VISIT_POLICY,visitType,visitTypeQuestion,financiallyCleared} from './application/visit-policy.js';
 import { clockText,operationReply,pendingDeliveryReply } from './presentation.js';
 import { activeDraft,carryDialogue,dialogueGrounding,expectedSlot,recordDialogue } from './application/dialogue-state.js';
 import type { ExpectedSlot } from './application/dialogue-state.js';
@@ -77,6 +77,10 @@ export class DomainService implements ConversationUseCases {
         }
         return {reply:text,mode:this.repository.mode};
       };
+      // Las rutas no agendables invalidan también una propuesta pendiente.
+      const careRoute=input.action==='sendMessage'&&user.role==='PATIENT'
+        ?careRouteAnswer(input.chatInput)||CARE_ROUTES.find(r=>r.code===intent?.appointment_type)?.code:undefined;
+      if(careRoute){await persist({});return reply(careRouteReply(careRoute),false);}
       if(input.action==='confirm') {
         const proposal:Proposal|undefined=state.proposal;
         if(!proposal || input.proposalId!==proposal.id) throw new ConflictException('No hay una operación pendiente con esa confirmación.');
@@ -286,9 +290,9 @@ export class DomainService implements ConversationUseCases {
         const slot=awaiting||expectedSlot(next);
         await persist({...next,awaiting:slot,prompt:{slot,text}});return reply(text);
       };
-      if(draft.intent==='reserve'&&visitPolicy.available&&!visitType(draft.appointment_type)){
-        const selection:Selection={type:'appointment_types',choices:VISIT_TYPES.map(t=>({label:t.label,intent:'reserve',appointment_type:t.code}))};
-        const result=await saveDraft(visitTypeQuestion,selection,'option');return {...result,choices:VISIT_TYPES.map(t=>({label:t.label,value:'Tipo de cita: '+t.code}))};
+      if(draft.intent==='reserve'&&visitPolicy.available&&!VISIT_TYPES.some(t=>t.code===draft.appointment_type)){
+        const selection:Selection={type:'appointment_types',choices:[...VISIT_TYPES,...CARE_ROUTES].map(t=>({label:t.label,intent:'reserve',appointment_type:t.code}))};
+        const result=await saveDraft(visitTypeQuestion,selection,'option');return {...result,choices:[...VISIT_TYPES,...CARE_ROUTES].map(t=>({label:t.label,value:'Tipo de cita: '+t.code}))};
       }
       if(serviceAssignment&&['reserve','availability'].includes(draft.intent)){
         delete draft.doctor_id;delete draft.doctor_name;draft.allocation='AUTO';

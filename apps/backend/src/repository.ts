@@ -8,7 +8,7 @@ import type { AgendaPort } from './ports/integrations.js';
 import type { SchedulingRepository } from './ports/application.js';
 import { publishDemoNotification } from './adapters/notification-inbox.js';
 import {rejectionReason} from './application/rejection-reasons.js';
-import {LEGACY_VISIT_POLICY,visitType,financiallyCleared,type VisitPolicy} from './application/visit-policy.js';
+import {LEGACY_VISIT_POLICY,VISIT_TYPES,visitType,financiallyCleared,type VisitPolicy} from './application/visit-policy.js';
 export const demoIds = { patient: '10000000-0000-4000-8000-000000000001', otherPatient: '10000000-0000-4000-8000-000000000002', admin: '20000000-0000-4000-8000-000000000001', doctor: '30000000-0000-4000-8000-000000000001', otherDoctor: '30000000-0000-4000-8000-000000000002' };
 import {DEFAULT_SCHEDULE_BOOK,scheduleFor,scheduleTimes,validServiceDay,type ScheduleBook} from './application/service-schedule.js';
 import { pilotTimes,serviceDate } from './application/appointments.js';
@@ -128,7 +128,7 @@ export class Repository implements SchedulingRepository {
     const appointment = appointments.find(a=>a.code===payload.appointment_code);
     if (kind==='reserve') {
       const policy=await this.visitPolicy(cx);
-      if(policy.available&&(!visitType(payload.appointment_type)||payload.visit_policy_version!==policy.version))throw new ConflictException('Revisa el tipo de atención y la modalidad actual del servicio.');
+      if(policy.available&&(!VISIT_TYPES.some(t=>t.code===payload.appointment_type)||payload.visit_policy_version!==policy.version))throw new ConflictException('Revisa el tipo de atención y la modalidad actual del servicio.');
       if(user.role!=='PATIENT') throw new ForbiddenException('Solo el paciente puede solicitar una pre-reserva.');
       if(appointments.some(a=>!['CANCELLED','COMPLETED'].includes(a.status) && new Date(a.end_time).getTime()>Date.now())) throw new ConflictException('Ya tienes una cita vigente.');
       const doctor=policy.available?await this.allocateDoctor(user,payload.date,payload.time,cx):(await this.doctors(user,cx)).find(d=>d.id===payload.doctor_id);
