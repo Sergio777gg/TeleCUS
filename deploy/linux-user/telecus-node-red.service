@@ -1,0 +1,14 @@
+[Unit]
+Description=TeleCUS inferencia interna Node-RED
+Wants=telecus-ollama.service
+After=telecus-ollama.service
+
+[Service]
+WorkingDirectory=%h/telecus-fiet/TeleCUS
+ExecStart=%h/telecus-fiet/node24/bin/node --env-file=%h/telecus-fiet/node-red.env %h/telecus-fiet/node-red-runtime/node_modules/node-red/red.js --userDir %h/telecus-fiet/state/node-red --settings %h/telecus-fiet/TeleCUS/node-red/settings.cjs %h/telecus-fiet/TeleCUS/node-red/flows.json
+Restart=on-failure
+RestartSec=5
+UMask=0077
+
+[Install]
+WantedBy=default.target

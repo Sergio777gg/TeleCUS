@@ -34,7 +34,7 @@ import {DemoClinicalMetadata,PostgresClinicalMetadata} from './adapters/clinical
 export class Runtime {
   cfg=config();
   db=new Database(this.cfg.databaseUrl,this.cfg.databaseFile);
-  agenda:PostgresAgenda|undefined=this.cfg.agendaUrl && this.cfg.mode!=='demo' ? new PostgresAgenda(this.cfg.agendaUrl,this.cfg.agendaCaFile,this.cfg.agendaAddress,async():Promise<string>=>((await this.adminStore.settings()).payment_url)) : undefined;
+  agenda:PostgresAgenda|undefined=this.cfg.agendaUrl && this.cfg.mode!=='demo' ? new PostgresAgenda(this.cfg.agendaUrl,this.cfg.agendaCaFile,this.cfg.agendaAddress,async():Promise<string>=>((await this.adminStore.settings()).payment_url),this.cfg.mode==='supabase-readonly') : undefined;
   demoHolds=new DemoReservationHolds(this.db);
   holdWorker=new ReservationHoldWorker(()=>this.cfg.mode==='demo'?this.demoHolds.expire():this.agenda!.call('expire_holds'));
   repository=new Repository(this.db,this.cfg,this.agenda,cx=>this.cfg.mode==='demo'?this.demoSchedules(cx):this.adminStore.schedules(),this.demoHolds,cx=>this.visitPolicy(cx));
@@ -60,7 +60,7 @@ export class Runtime {
   jobs=new JobsService(this.db,this.cfg,this.domain,this.auth,this.interpreter);
   paymentStore=this.cfg.mode==='demo'?new DatabasePaymentReceiptStore(this.db,this.demoHolds):new PostgresPaymentReceiptStore(this.agenda,async user=>{
     const [appointments,doctors,deliveries]=await Promise.all([this.repository.pendingPaymentAppointments(user),this.repository.doctors(user),this.repository.pendingDeliveries(user)]);
-    return {receiptsAvailable:false,items:(user.role==='PATIENT'?appointments:[]).map(a=>{const processing=deliveries.some(d=>d.code===a.code&&d.operation==='confirm');return {appointment_id:a.id,code:a.code,doctor_name:doctors.find(d=>d.id===a.doctor_id)?.full_name||'Médico asignado',start_time:a.start_time,status:a.status,payment_status:a.payment_status,processing,can_pay:this.cfg.mode==='supabase-live'&&!processing,can_upload:false,receipt:null};})};
+    return {receiptsAvailable:false,items:(user.role==='PATIENT'?appointments:[]).map(a=>{const processing=deliveries.some(d=>d.code===a.code&&d.operation==='confirm');return {appointment_id:a.id,code:a.code,doctor_name:doctors.find(d=>d.id===a.doctor_id)?.full_name||'M�dico asignado',start_time:a.start_time,status:a.status,payment_status:a.payment_status,processing,can_pay:this.cfg.mode==='supabase-live'&&!processing,can_upload:false,receipt:null};})};
   },new LocalPaymentBlobStore(this.cfg.paymentFilesDirectory,this.cfg.paymentFilesKey));
   payments=new PaymentService(this.paymentStore,this.cfg.mode!=='supabase-readonly');
   clinicalMetadata=this.cfg.mode==='demo'?new DemoClinicalMetadata(this.db):new PostgresClinicalMetadata(this.agenda);
@@ -83,13 +83,13 @@ export class Runtime {
     return {status:'ok',mode:this.cfg.mode,database:this.db.driver,inference,worker:this.cfg.worker,deliveryWorker:Boolean(this.deliveries)};
   }
   async initialize() {
-    if(this.cfg.mode==='supabase-live' && !this.agenda)throw new Error('Falta la conexión restringida de agenda.');
+    if(this.cfg.mode==='supabase-live' && !this.agenda)throw new Error('Falta la conexi�n restringida de agenda.');
     if(this.agenda){await this.agenda.ready();this.patientWorkspaceAvailable=await this.agenda.call('patient_workspace_version')===1;}else this.patientWorkspaceAvailable=this.cfg.mode==='demo';
     await this.db.initialize();if(this.cfg.mode==='demo')await this.repository.seed();
     await this.paymentStore.initialize();
     await this.clinicalMetadata.initialize();
     if(this.cfg.mode==='demo')await this.demoHolds.initialize();
-    if(this.agenda&&await this.agenda.call('schedule_version')!==1)throw new Error('Falta la migración 006 de horarios y pre-reservas.');
+    if(this.agenda&&await this.agenda.call('schedule_version')!==1)throw new Error('Falta la migraci�n 006 de horarios y pre-reservas.');
     await this.adminStore.initialize(this.catalog.documents(),this.cfg.mode!=='supabase-readonly');
     this.publicSettings=await this.adminStore.settings();
     this.publicSchedules=await this.adminStore.schedules();
