@@ -129,3 +129,5 @@ systemctl --user restart telecus-app.service
 ```
 
 Los t�neles r�pidos cambian de nombre cuando se recrean. Actualizar entonces el origen de la API y, si se usa OAuth, la lista de retornos autorizados en Supabase. No usar comodines. Los servicios de usuario requieren una sesi�n activa; para arrancar antes de iniciar sesi�n, el administrador debe habilitar `loginctl enable-linger USUARIO`. No se necesita exponer los puertos locales en el router.
+
+La primera carga del modelo puede superar el tiempo de una petici�n normal en una VM. El servicio `telecus-model-warmup` realiza una precarga vac�a, sin datos de usuarios, y su temporizador la renueva cada cinco minutos para conservar el modelo en memoria. Consultar su estado con `journalctl --user -u telecus-model-warmup.service`. Si falla la precarga, verificar memoria, CPU y registros de Ollama antes de considerar validada la inferencia.

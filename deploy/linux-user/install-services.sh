@@ -10,12 +10,13 @@ for required in "$base/node24/bin/node" "$base/bin/cloudflared" "$base/ollama/bi
 done
 "$base/node24/bin/node" --env-file="$base/api.env" scripts/check-agenda-readonly.cjs
 mkdir -p "$HOME/.config/systemd/user" "$base/state/node-red"
-for unit in telecus-app telecus-node-red telecus-ollama telecus-tunnel; do
-  install -m 0644 "deploy/linux-user/$unit.service" "$HOME/.config/systemd/user/$unit.service"
+for unit in telecus-app.service telecus-node-red.service telecus-ollama.service telecus-tunnel.service telecus-model-warmup.service telecus-model-warmup.timer; do
+  install -m 0644 "deploy/linux-user/$unit" "$HOME/.config/systemd/user/$unit"
 done
 # Replace only the minimal probe and model services created for this FIET test.
 systemctl --user stop telecus-fiet-ollama.service telecus-fiet-probe.service telecus-fiet-tunnel.service 2>/dev/null || true
 systemctl --user daemon-reload
 systemctl --user enable telecus-app.service telecus-node-red.service telecus-ollama.service
+systemctl --user enable --now telecus-model-warmup.timer
 systemctl --user start telecus-app.service
 echo 'Servicios locales instalados. Comprobar salud antes de iniciar telecus-tunnel.service.'

@@ -1,7 +1,7 @@
 [Unit]
 Description=TeleCUS web y API
-Wants=telecus-node-red.service telecus-ollama.service
-After=telecus-node-red.service telecus-ollama.service
+Wants=telecus-node-red.service telecus-ollama.service telecus-model-warmup.service
+After=telecus-node-red.service telecus-ollama.service telecus-model-warmup.service
 
 [Service]
 WorkingDirectory=%h/telecus-fiet/TeleCUS
