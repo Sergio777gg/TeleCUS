@@ -1,0 +1,11 @@
+[Unit]
+Description=Precargar modelo local de TeleCUS sin datos de usuarios
+Wants=telecus-ollama.service
+After=telecus-ollama.service
+
+[Service]
+Type=oneshot
+WorkingDirectory=%h/telecus-fiet/TeleCUS
+ExecStart=%h/telecus-fiet/node24/bin/node scripts/warm-local-model.cjs
+TimeoutStartSec=660
+UMask=0077

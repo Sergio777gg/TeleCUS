@@ -1,0 +1,10 @@
+[Unit]
+Description=Mantener listo el modelo local de TeleCUS
+
+[Timer]
+OnBootSec=30
+OnUnitInactiveSec=5min
+Unit=telecus-model-warmup.service
+
+[Install]
+WantedBy=timers.target

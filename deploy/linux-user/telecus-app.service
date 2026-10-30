@@ -1,0 +1,14 @@
+[Unit]
+Description=TeleCUS web y API
+Wants=telecus-node-red.service telecus-ollama.service telecus-model-warmup.service
+After=telecus-node-red.service telecus-ollama.service telecus-model-warmup.service
+
+[Service]
+WorkingDirectory=%h/telecus-fiet/TeleCUS
+ExecStart=%h/telecus-fiet/node24/bin/node --env-file=%h/telecus-fiet/api.env apps/backend/dist/main.js
+Restart=on-failure
+RestartSec=5
+UMask=0077
+
+[Install]
+WantedBy=default.target
