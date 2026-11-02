@@ -1,0 +1,65 @@
+TeleCUS real en AWS: preparacion con contenedores
+
+Requiere Linux dedicado, Docker Engine y Compose. Los servicios internos
+escuchan en loopback; Caddy publica HTTP/HTTPS. Supabase sigue externo.
+No ejecutar dos instalaciones que ocupen los mismos puertos.
+
+Preparar privadamente deploy/aws-real/private/api.env y node-red.env usando
+deploy/env como referencia. La API necesita certificado supabase-ca.crt,
+google-client.json y google-tokens.enc en ese directorio privado.
+Conservar la clave de cifrado original de los tokens y documentos.
+Node-RED recibe solo su token interno y configuracion de inferencia.
+El usuario node del contenedor debe poder leer los archivos montados;
+mantener su directorio restringido en el host. No imprimir compose config
+completo: usar config --quiet para no exponer la configuracion privada.
+
+Antes de DATA_MODE=supabase-live: verificar esquema, migraciones y respaldo.
+La migracion 017 requiere validacion de integracion. No ejecutar el
+instalador inicial sobre un esquema existente. El modo real puede escribir
+configuracion durante el arranque: verificar consultas antes de iniciarlo.
+Mantener RUN_DELIVERY_WORKER=false durante la preparacion. Revisar la cola
+y otros servidores antes de activar entregas para no procesar operaciones
+antiguas ni duplicar instalaciones inadvertidamente.
+
+Desde la raiz, con credenciales y dominio preparados:
+
+export TELECUS_DOMAIN=TU_DOMINIO
+docker compose -f deploy/aws-real/compose.yaml config --quiet
+docker compose -f deploy/aws-real/compose.yaml build
+docker compose -f deploy/aws-real/compose.yaml up -d ollama
+docker compose -f deploy/aws-real/compose.yaml exec ollama ollama pull qwen3.5:4b
+docker compose -f deploy/aws-real/compose.yaml exec ollama ollama create telecus-local -f /models/Telecus.Modelfile
+docker compose -f deploy/aws-real/compose.yaml run --rm --no-deps app node scripts/warm-local-model.cjs
+docker compose -f deploy/aws-real/compose.yaml run --rm --no-deps app node scripts/check-agenda.cjs
+docker compose -f deploy/aws-real/compose.yaml run --rm --no-deps app node scripts/check-google.cjs
+
+Las comprobaciones de Google renuevan autorizacion y consultan metadatos;
+no crean eventos ni envian correos. No equivalen a validar entregas reales.
+Tras verificar integraciones y detener los servicios anteriores que ocupan
+los mismos puertos:
+docker compose -f deploy/aws-real/compose.yaml --profile public up -d
+
+Autorizar el retorno HTTPS exacto en Supabase. Verificar roles, inferencia,
+persistencia y reinicio. Fijar digests de imagen y modelo tras verificar
+el destino. El proyecto usa volumenes nuevos para estado; opcionalmente
+OLLAMA_MODELS_VOLUME permite reutilizar la cache anterior de modelos,
+siempre con un solo servidor Ollama accediendo a ella. Conservar respaldos
+y retorno a demo. No usar down -v al actualizar. Volver a la interfaz demo
+no revierte escrituras ya realizadas en Supabase.
+
+Medicion sintetica (Ollama local; sin Supabase ni configuracion privada):
+docker compose -f deploy/aws-real/compose.yaml run --rm --no-deps app node scripts/benchmark-local-model.cjs 8192 3
+
+Registra version/digest, carga, procesamiento, generacion, tokens/segundo
+y una extraccion minima ficticia. No fuerza descargar el modelo de RAM.
+El primer resultado solo es frio si estaba descargado antes. No ejecutarlo
+en paralelo con atencion real. Puede compararse con 4096, repitiendo luego
+las pruebas funcionales, de comportamiento e inyeccion antes de adoptar
+cambios. La comparacion no modifica el contexto de Node-RED.
+El despliegue AWS mantiene el modelo en RAM con TELECUS_AI_KEEP_ALIVE=-1.
+Los demas despliegues conservan diez minutos por defecto. Este ajuste evita
+recargas tras periodos sin uso mientras Ollama siga en ejecucion; no aumenta
+la velocidad de generacion ni evita cargarlo despues de reiniciar el host.
+Comprobar que queda memoria disponible para el resto de servicios.
+La medicion inicial en AWS registro carga de 30 s y solicitudes posteriores
+de unos 22 s con un ejemplo corto. No es una prueba de carga multiusuario.
