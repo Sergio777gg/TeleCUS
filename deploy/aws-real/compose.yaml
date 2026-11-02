@@ -1,0 +1,96 @@
+name: telecus-real
+services:
+  app:
+    build:
+      context: ../..
+      dockerfile: deploy/aws-real/Dockerfile
+    network_mode: host
+    init: true
+    restart: unless-stopped
+    env_file:
+      - ./private/api.env
+    environment:
+      NODE_ENV: production
+      API_HOST: 127.0.0.1
+      API_PORT: "5173"
+      PROCESS_KIND: api
+      DATABASE_URL: ""
+      SQLITE_FILE: /state/telecus.sqlite
+      PAYMENT_FILES_DIRECTORY: /state/payment-receipts
+      CLINICAL_FILES_DIRECTORY: /state/clinical-documents
+      AGENDA_CA_FILE: /private/supabase-ca.crt
+      GOOGLE_OAUTH_CLIENT_FILE: /private/google-client.json
+      GOOGLE_TOKEN_FILE: /private/google-tokens.enc
+      KNOWLEDGE_DIRECTORY: /app/knowledge/telecus
+      INFERENCE_URL: http://127.0.0.1:1880/telecus/internal/interpret
+    volumes:
+      - app-state:/state
+      - knowledge:/app/knowledge/telecus
+      - ./private:/private:ro
+    depends_on:
+      - node-red
+      - ollama
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:5173/api/healthz').then(async r=>{const h=await r.json();process.exit(r.ok&&h.mode===process.env.DATA_MODE&&h.database==='sqlite'?0:1)}).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 8s
+      start_period: 60s
+    logging: &logging
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+  node-red:
+    build:
+      context: ../..
+      dockerfile: deploy/aws-real/NodeRed.Dockerfile
+    network_mode: host
+    init: true
+    restart: unless-stopped
+    env_file:
+      - ./private/node-red.env
+    environment:
+      NODE_RED_HOST: 127.0.0.1
+      NODE_RED_PORT: "1880"
+      NODE_RED_DISABLE_EDITOR: "true"
+      OLLAMA_URL: http://127.0.0.1:11434
+      TELECUS_AI_MODEL: telecus-local
+      TELECUS_AI_CONTEXT: "8192"
+    volumes:
+      - node-red-state:/state
+    logging: *logging
+  ollama:
+    image: ${OLLAMA_IMAGE:-ollama/ollama:latest}
+    network_mode: host
+    restart: unless-stopped
+    environment:
+      OLLAMA_HOST: 127.0.0.1:11434
+      OLLAMA_NUM_PARALLEL: "1"
+      OLLAMA_MAX_LOADED_MODELS: "1"
+    volumes:
+      - ollama-models:/root/.ollama
+      - ../../models/Telecus.Modelfile:/models/Telecus.Modelfile:ro
+    logging: *logging
+  proxy:
+    profiles: [public]
+    image: caddy:2
+    network_mode: host
+    restart: unless-stopped
+    environment:
+      TELECUS_DOMAIN: ${TELECUS_DOMAIN:?Set the approved public domain}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      app:
+        condition: service_healthy
+    logging: *logging
+volumes:
+  app-state:
+  knowledge:
+  node-red-state:
+  ollama-models:
+    name: ${OLLAMA_MODELS_VOLUME:-telecus-real_ollama-models}
+  caddy-data:
+  caddy-config:
