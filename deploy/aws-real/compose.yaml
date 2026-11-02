@@ -56,6 +56,7 @@ services:
       OLLAMA_URL: http://127.0.0.1:11434
       TELECUS_AI_MODEL: telecus-local
       TELECUS_AI_CONTEXT: "8192"
+      TELECUS_AI_KEEP_ALIVE: "-1"
     volumes:
       - node-red-state:/state
     logging: *logging
@@ -73,7 +74,7 @@ services:
     logging: *logging
   proxy:
     profiles: [public]
-    image: caddy:2
+    image: ${CADDY_IMAGE:-caddy:2}
     network_mode: host
     restart: unless-stopped
     environment:
@@ -93,4 +94,5 @@ volumes:
   ollama-models:
     name: ${OLLAMA_MODELS_VOLUME:-telecus-real_ollama-models}
   caddy-data:
+    name: ${CADDY_DATA_VOLUME:-telecus-real_caddy-data}
   caddy-config:

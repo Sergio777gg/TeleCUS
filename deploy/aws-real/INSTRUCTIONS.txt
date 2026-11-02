@@ -56,4 +56,10 @@ El primer resultado solo es frio si estaba descargado antes. No ejecutarlo
 en paralelo con atencion real. Puede compararse con 4096, repitiendo luego
 las pruebas funcionales, de comportamiento e inyeccion antes de adoptar
 cambios. La comparacion no modifica el contexto de Node-RED.
-No se ha demostrado todavia una mejora de velocidad en AWS.
+El despliegue AWS mantiene el modelo en RAM con TELECUS_AI_KEEP_ALIVE=-1.
+Los demas despliegues conservan diez minutos por defecto. Este ajuste evita
+recargas tras periodos sin uso mientras Ollama siga en ejecucion; no aumenta
+la velocidad de generacion ni evita cargarlo despues de reiniciar el host.
+Comprobar que queda memoria disponible para el resto de servicios.
+La medicion inicial en AWS registro carga de 30 s y solicitudes posteriores
+de unos 22 s con un ejemplo corto. No es una prueba de carga multiusuario.
